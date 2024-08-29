@@ -12,7 +12,7 @@ Estimating the size of pre-colonial Indigenous populations in Australia and the 
 ## <a href="https://github.com/cjabradshaw/AusIndigN/tree/main/scripts">Scripts</a>
 R code by Corey Bradshaw (<a href="http://github.com/cjabradshaw">@cjabradshaw</a>)
 
-### <a href="https://github.com/cjabradshaw/AusIndigN/tree/main/scripts">base scripts</a>
+### <a href="https://github.com/cjabradshaw/AusIndigN/tree/main/scripts">base script</a>
 - <code>indigN.R</code>: includes all code used to derive estimates reported in the paper mentioned above
 
 ### <a href="https://github.com/cjabradshaw/AusIndigN/tree/main/scripts/source">source functions</a>
