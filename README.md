@@ -1,6 +1,4 @@
-# Net primary production models for Australia to estimate carrying capacity of pre-colonial Indigenous population
-# (includes code to compare predictions to anthropological/historical accounts, and a demographic model to estimate
-# the number of excess deaths occurring from pre-colonial period to late 19<sup>th</sup> Century
+# Net primary production models for Australia to estimate carrying capacity of pre-colonial Indigenous population (includes code to compare predictions to anthropological/historical accounts, and a demographic model to estimate the number of excess deaths occurring from pre-colonial period to late 19<sup>th</sup> Century
 <a href="https://www.ucy.ac.cy/migrate/"><img align="right" src="www/MigratelogoShad.png" width="200" style="margin-top: 20px"></a>
 <a href="https://zenodo.org/doi/10.5281/zenodo.10561469"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.10561469.svg" alt="DOI"></a>
 
