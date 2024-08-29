@@ -17,8 +17,6 @@ library(scatterplot3d)
 library(spatstat)
 library(spatialEco)
 library(SpatialPack)
-library(foreach)
-library(doSNOW)
 library(performance)
 library(sjPlot)
 library(dismo)
@@ -27,9 +25,9 @@ library(truncnorm)
 library(bootstrap)
 
 ## source functions
-source("matrixOperators.r")
-source("new_lmer_AIC_tables3.R") 
-source("r.squared.R") 
+source("source/matrixOperators.r")
+source("source/new_lmer_AIC_tables3.R") 
+source("source/r.squared.R") 
 
 ## custom functions
 # gradient function for immigration
@@ -139,7 +137,7 @@ linreg.ER <- function(x,y) { # where x and y are vectors of the same length; cal
 ## set grids
 
 ## NPP (HadCM3)
-nppH <- read.table("NppSahul(0-140ka_rawvalues)_Krapp2021.csv", header=T, sep=",") # 0.5 deg lat resolution
+nppH <- read.table("data/NppSahul(0-140ka_rawvalues)_Krapp2021.csv", header=T, sep=",") # 0.5 deg lat resolution
 not.naH <- which(is.na(nppH[,3:dim(nppH)[2]]) == F, arr.ind=T)
 upper.rowH <- as.numeric(not.naH[1,1])
 lower.rowH <- as.numeric(not.naH[dim(not.naH)[1],1])
@@ -198,7 +196,7 @@ primiparity.walker <- c(17.7,18.7,19.5,18.5,18.5,18.7,25.7,19,20.5,18.8,17.8,18.
 prim.mean <- round(mean(primiparity.walker),0)
 prim.lo <- round(quantile(primiparity.walker,probs=0.025),0)
 prim.hi <- round(quantile(primiparity.walker,probs=0.975),0)
-dat.world13 <- read.table("world2013lifetable.csv", header=T, sep=",")
+dat.world13 <- read.table("data/world2013lifetable.csv", header=T, sep=",")
 fert.world13 <- dat.world13$m.f
 fert.trunc <- fert.world13[1:(longev+1)]
 pfert.trunc <- fert.trunc/sum(fert.trunc)
@@ -560,7 +558,7 @@ r.max.gen.Cole.sd <- mean(c((r.max.gen.Cole - r.max.lo.gen.Cole)/1.96, (r.max.up
                           "pdens"=LRB$density/100)
     write.table(bindens, "bindens.csv", sep=",", row.names = F)
     
-    bindensModOverl <- read.csv("bindensModelOverlay.csv")
+    bindensModOverl <- read.csv("data/bindensModelOverlay.csv")
     
     plot(bindensModOverl$pdens, bindensModOverl$modD, pch=19, ylab="model", xlab="Binford", xlim=c(0,1.2), ylim=c(0,1.2))
     bindensMod.fit <- lm(modD ~ pdens, data=bindensModOverl)
@@ -720,7 +718,6 @@ r.max.gen.Cole.sd <- mean(c((r.max.gen.Cole - r.max.lo.gen.Cole)/1.96, (r.max.up
     prim.lo <- round(quantile(primiparity.walker,probs=0.025),0)
     prim.hi <- round(quantile(primiparity.walker,probs=0.975),0)
     
-    dat.world13 <- read.table("world2013lifetable.csv", header=T, sep=",")
     fert.world13 <- dat.world13$m.f
     fert.trunc <- fert.world13[1:(longev+1)]
     pfert.trunc <- fert.trunc/sum(fert.trunc)
