@@ -15,7 +15,7 @@ R code by Corey Bradshaw (<a href="http://github.com/cjabradshaw">@cjabradshaw</
 ### base script
 - <code>indigN.R</code>: includes all code used to derive estimates reported in the paper mentioned above
 
-### <a href="https://github.com/cjabradshaw/AusIndigN/tree/main/scripts/source">Source functions</a>
+### <a href="https://github.com/cjabradshaw/AusIndigN/tree/main/scripts/source">source functions</a>
 - <code>matrixOperators.r</code>: functions for manipulating matrices for population projections
 - <code>new_lmer_AIC_tables3.r</code>: functions to calculate information-theoretic parameters for linear models
 - <code>r.squared.r</code>: functions to calculate goodness of fit for linear models
