@@ -25,9 +25,9 @@ library(truncnorm)
 library(bootstrap)
 
 ## source functions
-source("source/matrixOperators.r")
-source("source/new_lmer_AIC_tables3.R") 
-source("source/r.squared.R") 
+source("matrixOperators.r")
+source("new_lmer_AIC_tables3.R") 
+source("r.squared.R") 
 
 ## custom functions
 # gradient function for immigration
@@ -137,7 +137,7 @@ linreg.ER <- function(x,y) { # where x and y are vectors of the same length; cal
 ## set grids
 
 ## NPP (HadCM3)
-nppH <- read.table("data/NppSahul(0-140ka_rawvalues)_Krapp2021.csv", header=T, sep=",") # 0.5 deg lat resolution
+nppH <- read.table("NppSahul(0-140ka_rawvalues)_Krapp2021.csv", header=T, sep=",") # 0.5 deg lat resolution
 not.naH <- which(is.na(nppH[,3:dim(nppH)[2]]) == F, arr.ind=T)
 upper.rowH <- as.numeric(not.naH[1,1])
 lower.rowH <- as.numeric(not.naH[dim(not.naH)[1],1])
@@ -196,7 +196,7 @@ primiparity.walker <- c(17.7,18.7,19.5,18.5,18.5,18.7,25.7,19,20.5,18.8,17.8,18.
 prim.mean <- round(mean(primiparity.walker),0)
 prim.lo <- round(quantile(primiparity.walker,probs=0.025),0)
 prim.hi <- round(quantile(primiparity.walker,probs=0.975),0)
-dat.world13 <- read.table("data/world2013lifetable.csv", header=T, sep=",")
+dat.world13 <- read.table("world2013lifetable.csv", header=T, sep=",")
 fert.world13 <- dat.world13$m.f
 fert.trunc <- fert.world13[1:(longev+1)]
 pfert.trunc <- fert.trunc/sum(fert.trunc)
@@ -432,8 +432,23 @@ r.max.gen.Cole.sd <- mean(c((r.max.gen.Cole - r.max.lo.gen.Cole)/1.96, (r.max.up
     plot((K.rast))
     writeRaster(K.rast, filename="KparaMod.grd", format="raster", overwrite=T)
     
+    Nprp.xyz <- data.frame("x"=K.xyz$x, "y"=K.xyz$y, "Nprp"=K.xyz$K/(sum(K.xyz$K, na.rm=T)))
+    head(Nprp.xyz)
+    hist(Nprp.xyz$Nprp)
     
+    N2M.xyz <- data.frame("x"=K.xyz$x, "y"=K.xyz$y, "N2M"=2e6*Nprp.xyz$Nprp)
+    N3M.xyz <- data.frame("x"=K.xyz$x, "y"=K.xyz$y, "N2M"=3e6*Nprp.xyz$Nprp)
     
+    write.csv(N2M.xyz, "N2Mxyz.csv")
+    write.csv(N3M.xyz, "N3Mxyz.csv")
+    
+    N2M.rast <- rasterFromXYZ(N2M.xyz, crs=CRS("+proj=longlat +datum=WGS84"))
+    plot((N2M.rast))
+    writeRaster(N2M.rast, filename="N2M.grd", format="raster", overwrite=T)
+    
+    N3M.rast <- rasterFromXYZ(N3M.xyz, crs=CRS("+proj=longlat +datum=WGS84"))
+    plot((N3M.rast))
+    writeRaster(N3M.rast, filename="N3M.grd", format="raster", overwrite=T)
     
     ## SAHUL
     ## calculate all Ks as relative to current
@@ -511,6 +526,11 @@ r.max.gen.Cole.sd <- mean(c((r.max.gen.Cole - r.max.lo.gen.Cole)/1.96, (r.max.up
     BI.K.cell
     round(150/cell.area * BI.K.cell, 0)
     
+    BI.cellN <- 3491
+    BI.cellD <- BI.cellN/cell.area
+    BI.predN <- BI.cellD * 150
+    round(BI.predN, 0)
+    
     # -40.692, 144.944 (Robbins Island, Tasmania): 50 people (Kelly in 1816, Baudin 1964)
     RI.crds <- rbind(coordlist2xyz(list(82, 70)))
     RI.K.cell <- K.rot.array[RI.crds[1,1], RI.crds[1,2], 1]
@@ -523,11 +543,22 @@ r.max.gen.Cole.sd <- mean(c((r.max.gen.Cole - r.max.lo.gen.Cole)/1.96, (r.max.up
     BB.K.cell
     round(416/cell.area * BB.K.cell, 0)
     
-    # -25.802, 113.025 (Dirk Hartog, WA); 620 km2, 40 people
+    BB.cellN <- 3548
+    BB.cellD <- BB.cellN/cell.area
+    BB.predN <- BB.cellD * 416
+    round(BB.predN, 0)
+    
+    
+    # -25.802, 113.025 (Dorre & Bernier Islands, WA); 100 km2, 40 people
     DH.crds <- rbind(coordlist2xyz(list(52, 7)))
     DH.K.cell <- K.rot.array[DH.crds[1,1], DH.crds[1,2], 1]
     DH.K.cell
-    round(620/cell.area * DH.K.cell, 0)
+    round(100/cell.area * DH.K.cell, 0)
+    
+    DBI.cellN <- 1331
+    DBI.cellD <- DBI.cellN/cell.area
+    DBI.predN <- DBI.cellD * 100
+    round(DBI.predN, 0)
     
     # Botany Bay Kurnel Meeting Place -34 00 09" / 151 13" 15.6" ("no more than forty")
     # 24.11 km2; First Fleet observation
@@ -537,11 +568,33 @@ r.max.gen.Cole.sd <- mean(c((r.max.gen.Cole - r.max.lo.gen.Cole)/1.96, (r.max.up
     BBKMP.K.cell
     round(24.11/cell.area * BBKMP.K.cell, 0)
     
+    BBKMP.cellN <- 3548
+    BBKMP.cellD <- BBKMP.cellN/cell.area
+    BBKMP.predN <- BBKMP.cellD * 24.11
+    round(BBKMP.predN, 0)
+    
+    # Sydney Cove
+    # "Their number in the neighbourhood of this settlement, that is within ten miles (16 km) to
+    # the northward and ten miles to the southward, I reckon at fifteen hundred.
+    # Governor Phillip to Lord Sydney, 10 July 1788, in Historical Records of Australia,
+    # Volume 1, 1788-1796, Governor's Despatches to and from England
+    # (Sydney: The Library Committee of the Commonwealth Parliament, 1914), p. 65.
+    # 151.2200032,	-33.86924628; area with 16 km buffer = 111.32^2 * 0.03944372784279604 = 489
+    SC.cellN <- 3548
+    SC.cellD <- SC.cellN/cell.area
+    SC.predN <- SC.cellD * 489
+    round(SC.predN, 0)
+    
     # Possession Island, -10.72 / 142.40, 10 men, 5 km2 (Flinders referencing Cook)
     PI.crds <- rbind(coordlist2xyz(list(22, 64)))
     PI.K.cell <- K.rot.array[PI.crds[1,1], PI.crds[1,2], 1]
     PI.K.cell
     round(5/cell.area * PI.K.cell, 0)
+    
+    PI.cellN <- 3001
+    PI.cellD <- PI.cellN/cell.area
+    PI.predN <- PI.cellD * 5
+    round(PI.predN, 0)
     
     # Darling (Erub) Island -9.59, 143.76, 5.7 km2, 80-90 people (Flinders 1803)
     EI.crds <- rbind(coordlist2xyz(list(19, 68)))
@@ -558,7 +611,7 @@ r.max.gen.Cole.sd <- mean(c((r.max.gen.Cole - r.max.lo.gen.Cole)/1.96, (r.max.up
                           "pdens"=LRB$density/100)
     write.table(bindens, "bindens.csv", sep=",", row.names = F)
     
-    bindensModOverl <- read.csv("data/bindensModelOverlay.csv")
+    bindensModOverl <- read.csv("bindensModelOverlay.csv")
     
     plot(bindensModOverl$pdens, bindensModOverl$modD, pch=19, ylab="model", xlab="Binford", xlim=c(0,1.2), ylim=c(0,1.2))
     bindensMod.fit <- lm(modD ~ pdens, data=bindensModOverl)
@@ -718,6 +771,7 @@ r.max.gen.Cole.sd <- mean(c((r.max.gen.Cole - r.max.lo.gen.Cole)/1.96, (r.max.up
     prim.lo <- round(quantile(primiparity.walker,probs=0.025),0)
     prim.hi <- round(quantile(primiparity.walker,probs=0.975),0)
     
+    dat.world13 <- read.table("world2013lifetable.csv", header=T, sep=",")
     fert.world13 <- dat.world13$m.f
     fert.trunc <- fert.world13[1:(longev+1)]
     pfert.trunc <- fert.trunc/sum(fert.trunc)
@@ -2988,4 +3042,3 @@ abline(h=2510000, lty=2, col="red")
 target.N <- years.fut[which.min(abs(N.proj - 2510000))]
 target.N
 abline(v=target.N, lty=2, col="red")
-
