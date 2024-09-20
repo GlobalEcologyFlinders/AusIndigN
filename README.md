@@ -1,4 +1,4 @@
-# Net primary production to estimate carrying capacity of the pre-colonial Indigenous population in Australia
+# Estimating the pre-colonial Indigenous population in Australia and the aftermath of European invasion
 ### (includes code to compare predictions to anthropological/historical accounts, and a demographic model to estimate the number of excess deaths occurring from pre-colonial period to the late 19<sup>th</sup> Century)
 <img align="right" src="www/ausdensmap.jpg" width="300" style="margin-top: 20px">
 <a href="https://zenodo.org/doi/10.5281/zenodo.13451032"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.13451032.svg" alt="DOI"></a>
